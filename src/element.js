@@ -2,8 +2,8 @@ import bindings from './binding_manager'
 import { buildTemplate } from './utils'
 
 class Element extends HTMLElement {
-	constructor() {
-  	super();
+  constructor() {
+    super();
     this.isSmartElement = true;
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(buildTemplate(this.templateHTML()).content);
@@ -12,8 +12,8 @@ class Element extends HTMLElement {
   }
   
   connectedCallback() {
-  	this.onMount();
-  	bindings.applyBindings(this);
+    this.onMount();
+    bindings.applyBindings(this);
   }
   
   onMount() {

@@ -1,16 +1,16 @@
 import bindings from '../binding_manager'
 
 export default {
-	name: 'each',
+  name: 'each',
   init : ({element})=> {
-  	console.log("Storing repeated node");
-  	element.repeatedNode = element.firstElementChild;
+    console.log("Storing repeated node");
+    element.repeatedNode = element.firstElementChild;
   },
   update: ({element, evalValue, customElement, context})=> {
-  	element.innerHTML = "";
+    element.innerHTML = "";
     console.log("Iterating " + evalValue.length + " items");
-  	evalValue.forEach((item)=>{
-    	let newNode = element.repeatedNode.cloneNode(true);
+    evalValue.forEach((item)=>{
+      let newNode = element.repeatedNode.cloneNode(true);
       
       let newContext = {};
       //console.log("Building context.");

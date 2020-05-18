@@ -1,10 +1,10 @@
 export function evalInScope(script, scope) {
-	const scopedEval = Function(`"use strict"; return ${script}`).bind(scope)();
+  const scopedEval = Function(`"use strict"; return ${script}`).bind(scope)();
   return scopedEval;
 }
 
 export function setInScope(script, scope, newValue) {
-	const scopedEval = Function('newval', `"use strict"; ${script} = newval`).bind(scope)(newValue);
+  const scopedEval = Function('newval', `"use strict"; ${script} = newval`).bind(scope)(newValue);
   return scopedEval;
 }
 
