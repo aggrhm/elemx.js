@@ -30,7 +30,7 @@ class BindingManager {
     
     // find parent custom element
     if (!customElement) {
-      customElement = element.parentNode.getRootNode().host;
+      customElement = element.getRootNode().host;
     }
     element.smartContextElement = customElement;
 
@@ -38,7 +38,7 @@ class BindingManager {
     if (!context) {
       context
     }
-    context = context || element.smartContext || element.parentElement.smartContext || customElement;
+    context = context || element.smartContext || (element.parentElement && element.parentElement.smartContext) || customElement;
     element.smartContext = context
 
     // apply to children
@@ -65,7 +65,10 @@ class BindingManager {
     if (updateChildren) {
       let els = (element.shadowRoot ? element.shadowRoot : element).childNodes;
       Array.from(els).forEach((iel)=>{
-        if (iel.isSmartElement) return;
+        if (iel.isSmartElement) {
+          console.log("Skipping smart element.");
+          return;
+        }
         //console.log("Applying binding for child " + iel.nodeName);
         if (element.isSmartElement) {
           this.applyBindingsToInnerElement(iel, element, element);
