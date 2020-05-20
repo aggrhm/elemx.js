@@ -1,4 +1,4 @@
-import { evalInScope, setInScope } from '../utils'
+import { evalInScope } from '../utils'
 
 export default {
   name: 'sync',
@@ -8,7 +8,7 @@ export default {
       if (ev.target._isBindingUpdating == true) return;
       let val = ev.target.value;
       if (element.type == "checkbox") val = element.checked;
-      setInScope(rawValue, customElement, val);
+      evalInScope(rawValue, customElement, {set: val});
     });
   },
   update: ({element, rawValue, evalValue})=> {

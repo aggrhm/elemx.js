@@ -1,4 +1,4 @@
-import { evalInScope, setInScope } from '../utils'
+import { evalInScope } from '../utils'
 
 export default {
   name: 'click',

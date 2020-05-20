@@ -6,18 +6,34 @@ class Element extends HTMLElement {
     super();
     this.isSmartElement = true;
     this.attachShadow({mode: 'open'});
-    this.shadowRoot.appendChild(buildTemplate(this.templateHTML()).content);
+    console.log("Building shadow root for " + this.nodeName);
+    let content = buildTemplate({html: this.templateHTML(), css: this.templateCSS()}).content;
+    this.shadowRoot.appendChild(content);
     //let tc = document.getElementById("tpl-" + this.nodeName.toLowerCase()).content;
     //this.shadowRoot.appendChild(tc.cloneNode(true));
+    console.log("End constructor for " + this.nodeName);
   }
   
   connectedCallback() {
-    this.onMount();
     bindings.applyBindings(this);
+    this.onMount();
   }
   
   onMount() {
   
+  }
+
+  templateHTML() {
+    return "";
+  }
+
+  templateCSS() {
+    return "";
+  }
+
+  emitEvent(name, data) {
+    let ev = new CustomEvent(name, {detail: data});
+    this.dispatchEvent(ev);
   }
   
 }
