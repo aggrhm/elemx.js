@@ -47,7 +47,14 @@ class Element extends HTMLElement {
 
   hasCOBXParent() {
     let host = this.getRootNode().host
-    return host && host.isSmartElement;
+    if (host && host.isSmartElement) return true;
+    let p = this.parentElement;
+    while (true) {
+      if (!p) break;
+      if (p.isSmartElement) return true;
+      p = p.parentElement;
+    }
+    return false;
   }
   
 }

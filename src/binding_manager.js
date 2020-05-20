@@ -63,16 +63,18 @@ class BindingManager {
     }
     // apply to children
     if (updateChildren) {
-      let els = (element.shadowRoot ? element.shadowRoot : element).childNodes;
+      let els = element.childNodes;
+      // iterate children
       Array.from(els).forEach((iel)=>{
-        //console.log("Applying binding for child " + iel.nodeName);
-        if (element.isSmartElement) {
-          this.applyBindingsToInnerElement(iel, element, element);
-        } else{
-          this.applyBindingsToInnerElement(iel, customElement, context);
-        }
-        //bindVText(iel, customElement);
+        this.applyBindingsToInnerElement(iel, customElement, context);
       });
+      // iterate shadow root children
+      if (element.isSmartElement && element.shadowRoot) {
+        let schilds = element.shadowRoot.childNodes;
+        Array.from(schilds).forEach((iel)=>{
+          this.applyBindingsToInnerElement(iel, element, element);
+        });
+      }
     }
   }
 

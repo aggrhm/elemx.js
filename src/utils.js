@@ -1,6 +1,6 @@
 export function evalInScope(script, scope, opts) {
   opts = opts ? opts : {};
-  let _this = scope.this ? scope.this : scope;
+  let _this = (scope && scope.this) ? scope.this : scope;
   let fargnames = ['context'];
   let fargs = [scope];
   let fn = `"use strict"; return ${script}`;
