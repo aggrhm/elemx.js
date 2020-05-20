@@ -65,10 +65,6 @@ class BindingManager {
     if (updateChildren) {
       let els = (element.shadowRoot ? element.shadowRoot : element).childNodes;
       Array.from(els).forEach((iel)=>{
-        if (iel.isSmartElement) {
-          console.log("Skipping smart element.");
-          return;
-        }
         //console.log("Applying binding for child " + iel.nodeName);
         if (element.isSmartElement) {
           this.applyBindingsToInnerElement(iel, element, element);

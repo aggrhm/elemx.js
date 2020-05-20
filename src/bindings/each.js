@@ -1,4 +1,4 @@
-import { autorun } from 'mobx'
+import { autorun, reaction } from 'mobx'
 import bindings from '../binding_manager'
 import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers } from '../utils'
 
@@ -14,33 +14,39 @@ export default {
     let markers = insertTemplateMarkers(element, repeatedID);
 
     // setup autorun, needed here because element is going away
-    autorun((reaction)=>{
-      let evalValue = evalInScope(rawValue, context);
-      clearTemplateMarkers(markers);
-      console.log("Iterating " + evalValue.length + " items");
-      evalValue.forEach((item)=>{
-        let newNode = repeatedContent.cloneNode(true);
-        
-        let newContext = {};
-        newContext[cas] = item;
-        newContext.this = context;
+    reaction(
+      ()=> {
+        let array = evalInScope(rawValue, context);
+        return array.slice();
+      },
+      (array, reaction)=>{
+        clearTemplateMarkers(markers);
+        console.log("Iterating " + array.length + " items");
+        array.forEach((item)=>{
+          let newNode = repeatedContent.cloneNode(true);
+          
+          let newContext = {};
+          newContext[cas] = item;
+          newContext.this = context;
 
-        let children = Array.from(newNode.childNodes);
-        children.forEach( (n)=> {
-          n.smartContext = newContext;
-        });
-        window.children = children;
-        appendChildToTemplateMarkers(markers, newNode);
+          let children = Array.from(newNode.childNodes);
+          children.forEach( (n)=> {
+            n.smartContext = newContext;
+          });
+          window.children = children;
+          appendChildToTemplateMarkers(markers, newNode);
 
-        children.forEach( (n)=> {
-          if (!n.isSmartElement) {
+          children.forEach( (n)=> {
             console.log("APPLYING BINDINGS NOW FOR EACH");
             bindings.applyBindingsToInnerElement(n, customElement, newContext);
             console.log("DONE APPLYING BINDINGS");
-          }
+          });
         });
-      });
-    }); // end autorun
+      },
+      {
+        fireImmediately: true
+      }
+    ); // end autorun
 
   },
   managesChildren: true

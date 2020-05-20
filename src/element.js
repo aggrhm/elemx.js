@@ -22,7 +22,9 @@ class Element extends HTMLElement {
     console.log("Building shadow root for " + this.nodeName);
     let content = buildTemplate({html: this.templateHTML(), css: this.templateCSS()}).content;
     this.shadowRoot.appendChild(content);
-    bindings.applyBindings(this);
+    if (!this.hasCOBXParent()) {
+      bindings.applyBindings(this);
+    }
     this.onMount();
   }
   
@@ -41,6 +43,11 @@ class Element extends HTMLElement {
   emitEvent(name, data) {
     let ev = new CustomEvent(name, {detail: data});
     this.dispatchEvent(ev);
+  }
+
+  hasCOBXParent() {
+    let host = this.getRootNode().host
+    return host && host.isSmartElement;
   }
   
 }
