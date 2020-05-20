@@ -5,7 +5,7 @@ export function evalInScope(script, scope, opts) {
   let fargs = [scope];
   let fn = `"use strict"; return ${script}`;
 
-  if (opts.set) {
+  if ('set' in opts) {
     fargnames.push('newval');
     fargs.push(opts.set);
     fn = `"use strict"; ${script} = newval`;
@@ -27,8 +27,9 @@ export function evalInScope(script, scope, opts) {
   if (opts.debug) {
     // NOTE: this causes extra bindings
     console.log("Debugging eval===");
-    console.log(JSON.stringify(fbargs));
-    console.log(JSON.stringify(fargs));
+    console.log(fn);
+    console.log(fbargs);
+    console.log(fargs);
     console.log("End Debugging eval===");
   }
   const scopedEval = Function(...fbargs).bind(_this)(...fargs);
@@ -44,6 +45,28 @@ export function buildTemplate({html, css}) {
   }
   template.innerHTML = html;
   return template;
+}
+
+export function insertTemplateMarkers(node, id) {
+  let sm = document.createComment(id);
+  let em = document.createComment("/" + id);
+  node.parentNode.insertBefore(sm, node);
+  node.parentNode.insertBefore(em, node);
+  node.remove();
+  return [sm, em];
+}
+
+export function clearTemplateMarkers(markers) {
+  while(true) {
+    let sib = markers[0].nextSibling;
+    if (!sib || (sib.nodeType == 8 && sib.textContent == `/${markers[0].textContent}`)) break;
+    sib.remove();
+    //console.log("Removing " + sib.nodeName);
+  }
+}
+
+export function appendChildToTemplateMarkers(markers, child) {
+  markers[0].parentNode.insertBefore(child, markers[1]);
 }
 
 export default {

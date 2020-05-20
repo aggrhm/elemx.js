@@ -5,10 +5,11 @@ export default {
   init: ({element, rawValue, customElement})=> {
     let bind_event = element.getAttribute("@sync-event") || "change";
     element.addEventListener(bind_event, (ev)=> {
+      //console.log("Change occurred. binding updating = " + ev.target.isBindingUpdating);
       if (ev.target._isBindingUpdating == true) return;
       let val = ev.target.value;
       if (element.type == "checkbox") val = element.checked;
-      evalInScope(rawValue, customElement, {set: val});
+      evalInScope(rawValue, customElement, {set: val, debug: true});
     });
   },
   update: ({element, rawValue, evalValue})=> {
