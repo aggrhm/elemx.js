@@ -3,12 +3,11 @@ import bindings from '../binding_manager'
 import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers } from '../utils'
 
 export default {
-  name: 'each',
+  name: 'if',
   init : ({element, rawValue, customElement, context})=> {
     console.log("Storing repeated node");
     let repeatedContent = element.content;
     let repeatedID = Math.floor(Math.random() * 1e9);
-    let cas = element.getAttribute('@as');
     // insert markers
     console.log("Inserting template markers");
     let markers = insertTemplateMarkers(element, repeatedID);
@@ -16,19 +15,15 @@ export default {
     // setup autorun, needed here because element is going away
     reaction(
       ()=> {
-        let array = evalInScope(rawValue, context);
-        return array.slice();
+        let cond = evalInScope(rawValue, context);
+        return cond;
       },
-      (array, reaction)=>{
+      (cond, reaction)=>{
         clearTemplateMarkers(markers);
-        console.log("Iterating " + array.length + " items");
-        array.forEach((item)=>{
+        console.log("Handling conditional: " + cond);
+        if (cond) {
           let newNode = repeatedContent.cloneNode(true);
           
-          let newContext = {};
-          newContext[cas] = item;
-          newContext.this = context;
-
           let children = Array.from(newNode.childNodes);
           /*
           children.forEach( (n)=> {
@@ -40,10 +35,10 @@ export default {
 
           children.forEach( (n)=> {
             console.log("APPLYING BINDINGS NOW FOR EACH");
-            bindings.applyBindingsToInnerElement(n, customElement, newContext);
+            bindings.applyBindingsToInnerElement(n, customElement, context);
             console.log("DONE APPLYING BINDINGS");
           });
-        });
+        };
       },
       {
         fireImmediately: true
@@ -53,3 +48,4 @@ export default {
   },
   managesChildren: true
 }
+

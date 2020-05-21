@@ -7,6 +7,7 @@ import bnd_each from './bindings/each'
 import bnd_text from './bindings/text'
 import bnd_on_return from './bindings/on-return'
 import bnd_class from './bindings/class'
+import bnd_if from './bindings/if'
 
 class BindingManager {
   constructor() {
@@ -134,5 +135,6 @@ bindingManager.registerBinding(bnd_sync);
 bindingManager.registerBinding(bnd_each);
 bindingManager.registerBinding(bnd_on_return);
 bindingManager.registerBinding(bnd_class);
+bindingManager.registerBinding(bnd_if);
 
 export default bindingManager;

@@ -17,7 +17,7 @@ export function evalInScope(script, scope, opts) {
       if (typeof(${script}) == 'function') {
         ${script}(ev);
       } else {
-        $script
+        ${script};
       }
     `
   }
