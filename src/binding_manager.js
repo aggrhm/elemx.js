@@ -1,5 +1,5 @@
 import { autorun } from 'mobx'
-import { evalInScope } from './utils'
+import { evalInScope, addElementDisposable } from './utils'
 
 import bnd_sync from './bindings/sync'
 import bnd_click from './bindings/click'
@@ -70,7 +70,7 @@ class BindingManager {
         this.applyBindingsToInnerElement(iel, customElement, context);
       });
       // iterate shadow root children
-      if (element.isSmartElement && element.shadowRoot) {
+      if (element.isReactiveElement && element.shadowRoot) {
         let schilds = element.shadowRoot.childNodes;
         Array.from(schilds).forEach((iel)=>{
           this.applyBindingsToInnerElement(iel, element, element);
@@ -90,7 +90,7 @@ class BindingManager {
       let rawValue = attr.nodeValue;
       if (binding.init) binding.init({element, rawValue, customElement, context});
       if (binding.update) {
-        autorun((reaction)=>{
+        let disposer = autorun((reaction)=>{
           let evalValue = null;
           let rawValue = attr.nodeValue;
           if (binding.evaluateValue != false) {
@@ -98,7 +98,8 @@ class BindingManager {
           }
           console.log(`${element.nodeName} ${attr.nodeName} value is ${evalValue}`);
           binding.update({element, rawValue, evalValue, customElement, context});
-        })
+        });
+        addElementDisposable(element, disposer);
       }
     } else {
       // check for event
@@ -119,10 +120,11 @@ class BindingManager {
     console.log("Processing :binding " + attr.nodeName + " in " + element.nodeName);
     // check input key
     let field = attr.nodeName.substring(1);
-    autorun((reaction)=>{
+    let disposer = autorun((reaction)=>{
       console.log(`${element.nodeName} Handling param attribute ${field}`);
       element[field] = evalInScope(attr.nodeValue, context);
     });
+    addElementDisposable(element, disposer);
     return ret;
   }
 

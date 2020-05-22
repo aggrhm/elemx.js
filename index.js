@@ -1,9 +1,9 @@
 import binding from './src/binding_manager'
 import utils from './src/utils'
-import Element from './src/element'
+import ReactiveElement from './src/reactive_element'
 
-export default {
+export {
+  ReactiveElement,
   binding,
-  utils,
-  Element
+  utils
 }

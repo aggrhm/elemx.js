@@ -1,6 +1,6 @@
 import { autorun, reaction } from 'mobx'
 import bindings from '../binding_manager'
-import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers } from '../utils'
+import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers, addElementDisposable, removeElementDisposables } from '../utils'
 
 export default {
   name: 'each',
@@ -14,7 +14,7 @@ export default {
     let markers = insertTemplateMarkers(element, repeatedID);
 
     // setup autorun, needed here because element is going away
-    reaction(
+    let disposer = reaction(
       ()=> {
         let array = evalInScope(rawValue, context);
         return array.slice();
@@ -49,6 +49,7 @@ export default {
         fireImmediately: true
       }
     ); // end autorun
+    addElementDisposable(markers[0], disposer);
 
   },
   managesChildren: true

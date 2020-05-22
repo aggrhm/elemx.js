@@ -60,6 +60,7 @@ export function clearTemplateMarkers(markers) {
   while(true) {
     let sib = markers[0].nextSibling;
     if (!sib || (sib.nodeType == 8 && sib.textContent == `/${markers[0].textContent}`)) break;
+    removeElementDisposables(sib);
     sib.remove();
     //console.log("Removing " + sib.nodeName);
   }
@@ -67,6 +68,36 @@ export function clearTemplateMarkers(markers) {
 
 export function appendChildToTemplateMarkers(markers, child) {
   markers[0].parentNode.insertBefore(child, markers[1]);
+}
+
+export function addElementDisposable(element, disposable) {
+  element._disposables = element._disposables || [];
+  if (typeof(disposable) == 'function') {
+    disposable = {dispose: disposable};
+  }
+  element._disposables.push(disposable);
+}
+
+export function removeElementDisposables(element) {
+  setTimeout(()=>{
+    //console.log(`Looking at ${element.nodeName}`);
+    if (element._disposables) {
+      console.log(`Disposing ${element._disposables.length} disposables for ${element.nodeName}`);
+      element._disposables.forEach((b)=> { b.dispose() });
+      element._disposables = [];
+    }
+    // iterate children
+    element.childNodes.forEach((c)=>{
+      removeElementDisposables(c);
+    });
+    // remove from shadow dom
+    if (element.isReactiveElement && element.shadowRoot) {
+      //console.log("Disposing for shadow dom also.");
+      element.shadowRoot.childNodes.forEach((c)=>{
+        removeElementDisposables(c);
+      });
+    }
+  }, 10);
 }
 
 export default {

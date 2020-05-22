@@ -1,11 +1,11 @@
 import bindings from './binding_manager'
-import { buildTemplate } from './utils'
+import { buildTemplate, removeElementDisposables } from './utils'
 
-class Element extends HTMLElement {
+class ReactiveElement extends HTMLElement {
   constructor() {
     super();
     console.log("Start constructor for " + this.nodeName);
-    this.isSmartElement = true;
+    this.isReactiveElement = true;
     this.init();
 
     this.attachShadow({mode: 'open'});
@@ -22,10 +22,20 @@ class Element extends HTMLElement {
     console.log("Building shadow root for " + this.nodeName);
     let content = buildTemplate({html: this.templateHTML(), css: this.templateCSS()}).content;
     this.shadowRoot.appendChild(content);
-    if (!this.hasCOBXParent()) {
+    if (!this.hasReactiveParent()) {
+      console.log("APPLYING ROOT LEVEL BINDING FOR " + this.nodeName);
       bindings.applyBindings(this);
+      this.isReactiveRoot = true;
     }
     this.onMount();
+  }
+
+  disconnectedCallback() {
+    // remove bindings
+    if (this.isReactiveRoot) {
+      console.log("Removing disposables in custom element");
+      removeElementDisposables(this);
+    }
   }
   
   onMount() {
@@ -45,13 +55,13 @@ class Element extends HTMLElement {
     this.dispatchEvent(ev);
   }
 
-  hasCOBXParent() {
+  hasReactiveParent() {
     let host = this.getRootNode().host
-    if (host && host.isSmartElement) return true;
+    if (host && host.isReactiveElement) return true;
     let p = this.parentElement;
     while (true) {
       if (!p) break;
-      if (p.isSmartElement) return true;
+      if (p.isReactiveElement) return true;
       p = p.parentElement;
     }
     return false;
@@ -59,4 +69,4 @@ class Element extends HTMLElement {
   
 }
 
-export default Element
+export default ReactiveElement
