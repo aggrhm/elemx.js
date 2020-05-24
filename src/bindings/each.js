@@ -1,16 +1,16 @@
 import { autorun, reaction } from 'mobx'
 import bindings from '../binding_manager'
-import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers, addElementDisposable, removeElementDisposables } from '../utils'
+import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers, addElementDisposable, removeElementDisposables, debugLog } from '../utils'
 
 export default {
   name: 'each',
   init : ({element, rawValue, customElement, context})=> {
-    console.log("Storing repeated node");
+    debugLog("Storing repeated node");
     let repeatedContent = element.content;
     let repeatedID = Math.floor(Math.random() * 1e9);
     let cas = element.getAttribute('@as');
     // insert markers
-    console.log("Inserting template markers");
+    debugLog("Inserting template markers");
     let markers = insertTemplateMarkers(element, repeatedID);
 
     // setup autorun, needed here because element is going away
@@ -21,7 +21,7 @@ export default {
       },
       (array, reaction)=>{
         clearTemplateMarkers(markers);
-        console.log("Iterating " + array.length + " items");
+        debugLog("Iterating " + array.length + " items");
         array.forEach((item)=>{
           let newNode = repeatedContent.cloneNode(true);
           
@@ -39,9 +39,9 @@ export default {
           appendChildToTemplateMarkers(markers, newNode);
 
           children.forEach( (n)=> {
-            console.log("APPLYING BINDINGS NOW FOR EACH");
+            debugLog("APPLYING BINDINGS NOW FOR EACH");
             bindings.applyBindingsToInnerElement(n, customElement, newContext);
-            console.log("DONE APPLYING BINDINGS");
+            debugLog("DONE APPLYING BINDINGS");
           });
         });
       },

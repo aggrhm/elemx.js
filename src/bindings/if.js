@@ -1,15 +1,15 @@
 import { autorun, reaction } from 'mobx'
 import bindings from '../binding_manager'
-import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers } from '../utils'
+import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers, debugLog } from '../utils'
 
 export default {
   name: 'if',
   init : ({element, rawValue, customElement, context})=> {
-    console.log("Storing repeated node");
+    debugLog("Storing repeated node");
     let repeatedContent = element.content;
     let repeatedID = Math.floor(Math.random() * 1e9);
     // insert markers
-    console.log("Inserting template markers");
+    debugLog("Inserting template markers");
     let markers = insertTemplateMarkers(element, repeatedID);
 
     // setup autorun, needed here because element is going away
@@ -20,7 +20,7 @@ export default {
       },
       (cond, reaction)=>{
         clearTemplateMarkers(markers);
-        console.log("Handling conditional: " + cond);
+        debugLog("Handling conditional: " + cond);
         if (cond) {
           let newNode = repeatedContent.cloneNode(true);
           
@@ -34,9 +34,9 @@ export default {
           appendChildToTemplateMarkers(markers, newNode);
 
           children.forEach( (n)=> {
-            console.log("APPLYING BINDINGS NOW FOR EACH");
+            debugLog("APPLYING BINDINGS NOW FOR EACH");
             bindings.applyBindingsToInnerElement(n, customElement, context);
-            console.log("DONE APPLYING BINDINGS");
+            debugLog("DONE APPLYING BINDINGS");
           });
         };
       },

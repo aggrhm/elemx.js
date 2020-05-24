@@ -1,5 +1,5 @@
 import { autorun } from 'mobx'
-import { evalInScope, addElementDisposable } from './utils'
+import { evalInScope, addElementDisposable, debugLog } from './utils'
 
 class BindingManager {
   constructor() {
@@ -7,15 +7,15 @@ class BindingManager {
   }
 
   registerBinding(binding) {
-    console.log("Registering binding " + binding.name);
+    debugLog("Registering binding " + binding.name);
     this.bindings['@' + binding.name] = binding;
   }
 
   applyBindings(customElement) {
-    console.log("STARTING:: Binding " + customElement.nodeName + " to dom");
+    debugLog("STARTING:: Binding " + customElement.nodeName + " to dom");
 
     this.applyBindingsToInnerElement(customElement);
-    console.log("FINISHED:: Binding " + customElement.nodeName + " to dom");
+    debugLog("FINISHED:: Binding " + customElement.nodeName + " to dom");
   }
 
   applyBindingsToInnerElement(element, customElement, context) {
@@ -73,7 +73,7 @@ class BindingManager {
 
   processDirectiveBinding(element, customElement, context, attr) {
     let ret = {updateChildren: true};
-    console.log("Processing @binding " + attr.nodeName + " in " + element.nodeName);
+    debugLog("Processing @binding " + attr.nodeName + " in " + element.nodeName);
     // check binding
     let binding = this.bindings[attr.nodeName];
     if (binding) {
@@ -88,7 +88,7 @@ class BindingManager {
           if (binding.evaluateValue != false) {
             evalValue = evalInScope(rawValue, context);
           }
-          console.log(`${element.nodeName} ${attr.nodeName} value is ${evalValue}`);
+          debugLog(`${element.nodeName} ${attr.nodeName} value is ${evalValue}`);
           binding.update({element, rawValue, evalValue, customElement, context});
         });
         addElementDisposable(element, disposer);
@@ -109,11 +109,11 @@ class BindingManager {
 
   processParamBinding(element, customElement, context, attr) {
     let ret = {updateChildren: true};
-    console.log("Processing :binding " + attr.nodeName + " in " + element.nodeName);
+    debugLog("Processing :binding " + attr.nodeName + " in " + element.nodeName);
     // check input key
     let field = attr.nodeName.substring(1);
     let disposer = autorun((reaction)=>{
-      console.log(`${element.nodeName} Handling param attribute ${field}`);
+      debugLog(`${element.nodeName} Handling param attribute ${field}`);
       element[field] = evalInScope(attr.nodeValue, context);
     });
     addElementDisposable(element, disposer);

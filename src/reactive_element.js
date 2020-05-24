@@ -1,17 +1,17 @@
 import bindings from './binding_manager'
-import { buildTemplate, removeElementDisposables } from './utils'
+import { buildTemplate, removeElementDisposables, debugLog } from './utils'
 
 class ReactiveElement extends HTMLElement {
   constructor() {
     super();
-    console.log("Start constructor for " + this.nodeName);
+    debugLog("Start constructor for " + this.nodeName);
     this.isReactiveElement = true;
     this.init();
 
     this.attachShadow({mode: 'open'});
     //let tc = document.getElementById("tpl-" + this.nodeName.toLowerCase()).content;
     //this.shadowRoot.appendChild(tc.cloneNode(true));
-    console.log("End constructor for " + this.nodeName);
+    debugLog("End constructor for " + this.nodeName);
   }
 
   init() {
@@ -19,11 +19,11 @@ class ReactiveElement extends HTMLElement {
   }
   
   connectedCallback() {
-    console.log("Building shadow root for " + this.nodeName);
+    debugLog("Building shadow root for " + this.nodeName);
     let content = buildTemplate({html: this.templateHTML(), css: this.templateCSS()}).content;
     this.shadowRoot.appendChild(content);
     if (!this.hasReactiveParent()) {
-      console.log("APPLYING ROOT LEVEL BINDING FOR " + this.nodeName);
+      debugLog("APPLYING ROOT LEVEL BINDING FOR " + this.nodeName);
       bindings.applyBindings(this);
       this.isReactiveRoot = true;
     }
@@ -33,7 +33,7 @@ class ReactiveElement extends HTMLElement {
   disconnectedCallback() {
     // remove bindings
     if (this.isReactiveRoot) {
-      console.log("Removing disposables in custom element");
+      debugLog("Removing disposables in custom element");
       removeElementDisposables(this);
     }
   }

@@ -3962,14 +3962,7 @@
 
       let fbargs = fargnames;
       fbargs.push(fn);
-      if (opts.debug) {
-        // NOTE: this causes extra bindings
-        console.log("Debugging eval===");
-        console.log(fn);
-        console.log(fbargs);
-        console.log(fargs);
-        console.log("End Debugging eval===");
-      }
+      if (opts.debug) ;
       const scopedEval = Function(...fbargs).bind(_this)(...fargs);
       return scopedEval;
     }
@@ -4020,7 +4013,7 @@
       setTimeout(()=>{
         //console.log(`Looking at ${element.nodeName}`);
         if (element._disposables) {
-          console.log(`Disposing ${element._disposables.length} disposables for ${element.nodeName}`);
+          debugLog(`Disposing ${element._disposables.length} disposables for ${element.nodeName}`);
           element._disposables.forEach((b)=> { b.dispose(); });
           element._disposables = [];
         }
@@ -4038,7 +4031,14 @@
       }, 10);
     }
 
+    var DEBUG = false;
+
+    function debugLog(str) {
+    }
+
     var utils = {
+      DEBUG,
+      debugLog,
       evalInScope,
       buildTemplate
     };
@@ -4049,15 +4049,15 @@
       }
 
       registerBinding(binding) {
-        console.log("Registering binding " + binding.name);
+        debugLog("Registering binding " + binding.name);
         this.bindings['@' + binding.name] = binding;
       }
 
       applyBindings(customElement) {
-        console.log("STARTING:: Binding " + customElement.nodeName + " to dom");
+        debugLog("STARTING:: Binding " + customElement.nodeName + " to dom");
 
         this.applyBindingsToInnerElement(customElement);
-        console.log("FINISHED:: Binding " + customElement.nodeName + " to dom");
+        debugLog("FINISHED:: Binding " + customElement.nodeName + " to dom");
       }
 
       applyBindingsToInnerElement(element, customElement, context) {
@@ -4110,7 +4110,7 @@
 
       processDirectiveBinding(element, customElement, context, attr) {
         let ret = {updateChildren: true};
-        console.log("Processing @binding " + attr.nodeName + " in " + element.nodeName);
+        debugLog("Processing @binding " + attr.nodeName + " in " + element.nodeName);
         // check binding
         let binding = this.bindings[attr.nodeName];
         if (binding) {
@@ -4125,7 +4125,7 @@
               if (binding.evaluateValue != false) {
                 evalValue = evalInScope(rawValue, context);
               }
-              console.log(`${element.nodeName} ${attr.nodeName} value is ${evalValue}`);
+              debugLog(`${element.nodeName} ${attr.nodeName} value is ${evalValue}`);
               binding.update({element, rawValue, evalValue, customElement, context});
             });
             addElementDisposable(element, disposer);
@@ -4146,11 +4146,11 @@
 
       processParamBinding(element, customElement, context, attr) {
         let ret = {updateChildren: true};
-        console.log("Processing :binding " + attr.nodeName + " in " + element.nodeName);
+        debugLog("Processing :binding " + attr.nodeName + " in " + element.nodeName);
         // check input key
         let field = attr.nodeName.substring(1);
         let disposer = autorun((reaction)=>{
-          console.log(`${element.nodeName} Handling param attribute ${field}`);
+          debugLog(`${element.nodeName} Handling param attribute ${field}`);
           element[field] = evalInScope(attr.nodeValue, context);
         });
         addElementDisposable(element, disposer);
@@ -4164,14 +4164,14 @@
     class ReactiveElement extends HTMLElement {
       constructor() {
         super();
-        console.log("Start constructor for " + this.nodeName);
+        debugLog("Start constructor for " + this.nodeName);
         this.isReactiveElement = true;
         this.init();
 
         this.attachShadow({mode: 'open'});
         //let tc = document.getElementById("tpl-" + this.nodeName.toLowerCase()).content;
         //this.shadowRoot.appendChild(tc.cloneNode(true));
-        console.log("End constructor for " + this.nodeName);
+        debugLog("End constructor for " + this.nodeName);
       }
 
       init() {
@@ -4179,11 +4179,11 @@
       }
       
       connectedCallback() {
-        console.log("Building shadow root for " + this.nodeName);
+        debugLog("Building shadow root for " + this.nodeName);
         let content = buildTemplate({html: this.templateHTML(), css: this.templateCSS()}).content;
         this.shadowRoot.appendChild(content);
         if (!this.hasReactiveParent()) {
-          console.log("APPLYING ROOT LEVEL BINDING FOR " + this.nodeName);
+          debugLog("APPLYING ROOT LEVEL BINDING FOR " + this.nodeName);
           bindingManager.applyBindings(this);
           this.isReactiveRoot = true;
         }
@@ -4193,7 +4193,6 @@
       disconnectedCallback() {
         // remove bindings
         if (this.isReactiveRoot) {
-          console.log("Removing disposables in custom element");
           removeElementDisposables(this);
         }
       }
@@ -4265,12 +4264,9 @@
     var bnd_each = {
       name: 'each',
       init : ({element, rawValue, customElement, context})=> {
-        console.log("Storing repeated node");
         let repeatedContent = element.content;
         let repeatedID = Math.floor(Math.random() * 1e9);
         let cas = element.getAttribute('@as');
-        // insert markers
-        console.log("Inserting template markers");
         let markers = insertTemplateMarkers(element, repeatedID);
 
         // setup autorun, needed here because element is going away
@@ -4281,7 +4277,7 @@
           },
           (array, reaction)=>{
             clearTemplateMarkers(markers);
-            console.log("Iterating " + array.length + " items");
+            debugLog("Iterating " + array.length + " items");
             array.forEach((item)=>{
               let newNode = repeatedContent.cloneNode(true);
               
@@ -4299,9 +4295,7 @@
               appendChildToTemplateMarkers(markers, newNode);
 
               children.forEach( (n)=> {
-                console.log("APPLYING BINDINGS NOW FOR EACH");
                 bindingManager.applyBindingsToInnerElement(n, customElement, newContext);
-                console.log("DONE APPLYING BINDINGS");
               });
             });
           },
@@ -4350,11 +4344,8 @@
     var bnd_if = {
       name: 'if',
       init : ({element, rawValue, customElement, context})=> {
-        console.log("Storing repeated node");
         let repeatedContent = element.content;
         let repeatedID = Math.floor(Math.random() * 1e9);
-        // insert markers
-        console.log("Inserting template markers");
         let markers = insertTemplateMarkers(element, repeatedID);
 
         // setup autorun, needed here because element is going away
@@ -4365,7 +4356,6 @@
           },
           (cond, reaction)=>{
             clearTemplateMarkers(markers);
-            console.log("Handling conditional: " + cond);
             if (cond) {
               let newNode = repeatedContent.cloneNode(true);
               
@@ -4379,9 +4369,7 @@
               appendChildToTemplateMarkers(markers, newNode);
 
               children.forEach( (n)=> {
-                console.log("APPLYING BINDINGS NOW FOR EACH");
                 bindingManager.applyBindingsToInnerElement(n, customElement, context);
-                console.log("DONE APPLYING BINDINGS");
               });
             }      },
           {

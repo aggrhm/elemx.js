@@ -26,11 +26,11 @@ export function evalInScope(script, scope, opts) {
   fbargs.push(fn);
   if (opts.debug) {
     // NOTE: this causes extra bindings
-    console.log("Debugging eval===");
-    console.log(fn);
-    console.log(fbargs);
-    console.log(fargs);
-    console.log("End Debugging eval===");
+    debugLog("Debugging eval===");
+    debugLog(fn);
+    debugLog(fbargs);
+    debugLog(fargs);
+    debugLog("End Debugging eval===");
   }
   const scopedEval = Function(...fbargs).bind(_this)(...fargs);
   return scopedEval;
@@ -82,7 +82,7 @@ export function removeElementDisposables(element) {
   setTimeout(()=>{
     //console.log(`Looking at ${element.nodeName}`);
     if (element._disposables) {
-      console.log(`Disposing ${element._disposables.length} disposables for ${element.nodeName}`);
+      debugLog(`Disposing ${element._disposables.length} disposables for ${element.nodeName}`);
       element._disposables.forEach((b)=> { b.dispose() });
       element._disposables = [];
     }
@@ -100,7 +100,17 @@ export function removeElementDisposables(element) {
   }, 10);
 }
 
+export var DEBUG = false;
+
+export function debugLog(str) {
+  if (DEBUG) {
+    console.log(str);
+  }
+}
+
 export default {
+  DEBUG,
+  debugLog,
   evalInScope,
   buildTemplate
 }
