@@ -1,3 +1,13 @@
+/**
+ * @class - Add or remove element classes
+ *
+ * Example:
+ *
+ * <div @class="{open: this.isOpen, highlighted: this.isHighlighted}">
+ *    ...
+ * </div>
+ *
+ */
 import bindings from '../binding_manager'
 
 export default {

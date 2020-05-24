@@ -1,3 +1,14 @@
+/**
+ * @each - Iterate element for each item in list. To be used
+ * with <template> elements.
+ *
+ * Example:
+ *
+ * <template @each="this.todos" @as="todo">
+ *    ...
+ * </template>
+ *
+ */
 import { autorun, reaction } from 'mobx'
 import bindings from '../binding_manager'
 import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers, addElementDisposable, removeElementDisposables, debugLog } from '../utils'

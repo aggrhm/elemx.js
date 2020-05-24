@@ -1,3 +1,14 @@
+/**
+ * @if - Conditionally show or hide elements. To be used
+ * with <template> elements.
+ *
+ * Example:
+ *
+ * <template @if="this.isVisible">
+ *    ...
+ * </template>
+ *
+ */
 import { autorun, reaction } from 'mobx'
 import bindings from '../binding_manager'
 import { evalInScope, insertTemplateMarkers, clearTemplateMarkers, appendChildToTemplateMarkers, debugLog } from '../utils'
