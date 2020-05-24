@@ -5,11 +5,10 @@ export default {
   input: 'index.js',
   output: {
     file: 'dist/elemx.umd.js',
-    format: 'iife',
+    format: 'umd',
     name: 'elemx'
   },
   plugins: [
     resolve(),
-    commonjs()
   ]
 }

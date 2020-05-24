@@ -1,5 +1,8 @@
-var elemx = (function (exports) {
-    'use strict';
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (global = global || self, factory(global.elemx = {}));
+}(this, (function (exports) { 'use strict';
 
     /** MobX - (c) Michel Weststrate 2015 - 2020 - MIT Licensed */
     /*! *****************************************************************************
@@ -4402,6 +4405,6 @@ var elemx = (function (exports) {
     exports.bindings = bindingManager;
     exports.utils = utils;
 
-    return exports;
+    Object.defineProperty(exports, '__esModule', { value: true });
 
-}({}));
+})));
