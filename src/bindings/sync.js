@@ -9,7 +9,7 @@ export default {
       if (ev.target._isBindingUpdating == true) return;
       let val = ev.target.value;
       if ('checked' in element) val = element.checked;
-      evalInScope(rawValue, customElement, {set: val, debug: true});
+      evalInScope(rawValue, customElement, {set: val});
     });
   },
   update: ({element, rawValue, evalValue})=> {

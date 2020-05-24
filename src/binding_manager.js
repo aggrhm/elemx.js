@@ -25,14 +25,14 @@ class BindingManager {
     if (!customElement) {
       customElement = element.getRootNode().host;
     }
-    element.smartContextElement = customElement;
+    element.reactiveContextElement = customElement;
 
     // find parent context if in each block
     if (!context) {
       context
     }
-    context = context || element.smartContext || (element.parentElement && element.parentElement.smartContext) || customElement;
-    element.smartContext = context
+    context = context || element.reactiveContext || (element.parentElement && element.parentElement.reactiveContext) || customElement;
+    element.reactiveContext = context
 
     // apply to children
     let updateChildren = true;

@@ -4067,9 +4067,9 @@
         if (!customElement) {
           customElement = element.getRootNode().host;
         }
-        element.smartContextElement = customElement;
-        context = context || element.smartContext || (element.parentElement && element.parentElement.smartContext) || customElement;
-        element.smartContext = context;
+        element.reactiveContextElement = customElement;
+        context = context || element.reactiveContext || (element.parentElement && element.parentElement.reactiveContext) || customElement;
+        element.reactiveContext = context;
 
         // apply to children
         let updateChildren = true;
@@ -4238,7 +4238,7 @@
           if (ev.target._isBindingUpdating == true) return;
           let val = ev.target.value;
           if ('checked' in element) val = element.checked;
-          evalInScope(rawValue, customElement, {set: val, debug: true});
+          evalInScope(rawValue, customElement, {set: val});
         });
       },
       update: ({element, rawValue, evalValue})=> {
