@@ -3,6 +3,6 @@ export default {
   evaluateValue: true,
   update: ({element, evalValue, customElement})=> {
     //console.log("Got " + ret);
-    element.innerHTML = evalValue;
+    element.innerText = evalValue;
   }
 }

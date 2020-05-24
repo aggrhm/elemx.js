@@ -62,7 +62,48 @@ Directive bindings use the `@` symbol. They are definable to perform specific cu
 input type="text @sync="this.value"/>
 ```
 
-Several bindings are already pre-defined. See [pre-defined bindings](https://github.com/agquick/elemx.js/tree/master/src/bindings)
+#### Conditional Rendering
+
+```js
+<template @if="this.isShown">
+  <div>Conditionally shown</div>
+</template>
+```
+
+#### List Rendering
+
+```js
+<template @each="this.todos" @as="todo">
+  <todo-item :item="context.todo"></todo-item>
+</template>
+```
+
+#### Event Handling
+
+You can handle events from elements using the `@on-<event-name>` syntax.
+
+```js
+<div @on-click="this.handleClick"></div>
+```
+
+Elements can also trigger custom events using `emitEvent` in a ReactiveElement.
+
+```js
+class MyElement extends ReactiveElement {
+  emitCustomEvent() {
+    this.emitEvent('customevent', {test: true})
+  }
+}
+```
+
+#### Input Bindings
+
+```js
+<input @sync="this.message" placeholder="edit me"/>
+<p>Message is: <span @text="this.message"></span></p>
+```
+
+Several other bindings are already pre-defined. See [pre-defined bindings](https://github.com/agquick/elemx.js/tree/master/src/bindings)
 
 ### Custom Bindings
 
