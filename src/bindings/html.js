@@ -1,7 +1,8 @@
 export default {
-  name: 'text',
+  name: 'html',
   evaluateValue: true,
   update: ({element, evalValue, customElement})=> {
-    element.innerText = evalValue;
+    element.innerHTML = evalValue;
   }
 }
+

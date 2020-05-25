@@ -25,7 +25,7 @@ class HelloWorldElement extends elemx.ReactiveElement {
         <wl-textfield outlined placeholder="Your name" @sync="this.name" @sync-event="keyup"></wl-textfield>
       </p>
       <p>
-        👋 Hello, <span @text="this.name"></span>!
+        👋 Hello, {{ this.name }}!
       </p>
     `;
   }
@@ -35,9 +35,9 @@ customElements.define('hello-world', HelloWorldElement);
 
 ### Live Code
 
-[Hello World](https://jsfiddle.net/agquick/ytcn6s7z) - A must have
+[**Hello World**](https://jsfiddle.net/agquick/ytcn6s7z/8/) - A must have
 
-[Todo List](https://jsfiddle.net/agquick/z46vdtg9) - Also incorporates [weightless elements](https://weightless.dev)
+[**Todo List**](https://jsfiddle.net/agquick/z46vdtg9/19/) - Also incorporates [weightless elements](https://weightless.dev)
 
 ## Bindings
 
@@ -59,7 +59,7 @@ Directive bindings use the `@` symbol. They are definable to perform specific cu
 ```js
 // This will update the value of this element when `this.value` changes,
 // *AND* `this.value` will be updated when the element value changes
-input type="text @sync="this.value"/>
+<input type="text @sync="this.value"/>
 ```
 
 #### Conditional Rendering
@@ -100,7 +100,7 @@ class MyElement extends ReactiveElement {
 
 ```js
 <input @sync="this.message" placeholder="edit me"/>
-<p>Message is: <span @text="this.message"></span></p>
+<p>Message is: {{ this.message }}</p>
 ```
 
 Several other bindings are already pre-defined. See [pre-defined bindings](https://github.com/agquick/elemx.js/tree/master/src/bindings)
