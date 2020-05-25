@@ -50,9 +50,9 @@ customElements.define('hello-world', HelloWorldElement);
 
 ### Live Code
 
-[**Hello World**](https://jsfiddle.net/agquick/ytcn6s7z/) - A must have
+- [Hello World](https://jsfiddle.net/agquick/ytcn6s7z/) - A must have
 
-[**Todo List**](https://jsfiddle.net/agquick/z46vdtg9/) - Also incorporates [weightless elements](https://weightless.dev)
+- [Todo List](https://jsfiddle.net/agquick/z46vdtg9/) - Also incorporates [weightless elements](https://weightless.dev)
 
 ## Bindings
 

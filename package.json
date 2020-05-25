@@ -1,6 +1,6 @@
 {
   "name": "elemx",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Javascript front-end library for connecting MobX to native Web Components with a Vue-like template binding syntax",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,12 @@
   },
   "keywords": ["mobx", "vue", "react", "observable"],
   "author": "Alan Graham",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agquick/elemx.js"
+  },
+  "homepage": "https://github.com/agquick/elemx.js",
+  "license": "MIT",
   "dependencies": {
     "mobx": "^5.15.4"
   },
