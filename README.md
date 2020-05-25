@@ -29,6 +29,13 @@ class HelloWorldElement extends elemx.ReactiveElement {
       </p>
     `;
   }
+
+  templateCSS() {
+    // These styles are scoped to this component using the shadow dom
+    return `
+      p { ... }
+    `;
+  }
 }
 customElements.define('hello-world', HelloWorldElement);
 ```
@@ -48,8 +55,8 @@ ElemX binds expressions using observables and computeds to ReactiveElement attri
 Attribute bindings use `:` to denote an attribute of the element is bound to a reactive expression.
 
 ```js
-// This will update the value of this element when `this.value` changes.
-<input type="text" :value="this.value"/>
+// This will update the value of the input when `this.name` changes.
+<input type="text" :value="this.name"/>
 ```
 
 ### Directive Bindings
@@ -57,9 +64,9 @@ Attribute bindings use `:` to denote an attribute of the element is bound to a r
 Directive bindings use the `@` symbol. They are definable to perform specific customizable reactive actions to the element.
 
 ```js
-// This will update the value of this element when `this.value` changes,
-// *AND* `this.value` will be updated when the element value changes
-<input type="text @sync="this.value"/>
+// This will update the value of the input when `this.name` changes,
+// *AND* `this.name` will be updated when the input value changes
+<input type="text @sync="this.name"/>
 ```
 
 #### Conditional Rendering
@@ -74,6 +81,8 @@ Directive bindings use the `@` symbol. They are definable to perform specific cu
 
 ```js
 <template @each="this.todos" @as="todo">
+  // `this` is still available here, and references the ReactiveElement
+  // that defines this template
   <todo-item :item="context.todo"></todo-item>
 </template>
 ```
@@ -114,7 +123,7 @@ import { bindings } from 'elemx';
 
 let newBinding = {
   // how to access binding on element with '@'
-  name: [custom binding name],
+  name: "my-binding",
 
   // whether to pass the evaluated binding express to the binding handlers
   evaluateValue: true
@@ -132,4 +141,13 @@ let newBinding = {
 
 // register the binding with ElemX
 bindings.registerBinding(newBinding);
+
+// now use the binding in template HTML
+class MyElement extends ReactiveElement {
+  templateHTML() {
+    return `
+      <div @my-binding="this.value"></div>
+    `;
+  }
+}
 ```
