@@ -1,6 +1,14 @@
 # ElemX.js
 
-**ElemX** is a proof-of-concept library for connecting Mobx to native Web Components with a Vue-like template binding syntax.
+**ElemX** is a proof-of-concept front-end javascript library for connecting MobX to native Web Components with a Vue-like template binding syntax.
+
+```
+# import
+$ npm install elemx
+
+# use in project
+import { ReactiveElement } from 'elemx';
+```
 
 ## Why?
 
@@ -15,7 +23,7 @@ Yes, this is another front-end javascript framework, so why write it?
 ### Hello World
 
 ```js
-class HelloWorldElement extends elemx.ReactiveElement {
+class HelloWorldElement extends ReactiveElement {
   @observable name = "World";
   
   templateHTML() {
@@ -66,7 +74,7 @@ Directive bindings use the `@` symbol. They are definable to perform specific cu
 ```js
 // This will update the value of the input when `this.name` changes,
 // *AND* `this.name` will be updated when the input value changes
-<input type="text @sync="this.name"/>
+<input type="text" @sync="this.name"/>
 ```
 
 #### Conditional Rendering
