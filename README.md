@@ -54,6 +54,8 @@ customElements.define('hello-world', HelloWorldElement);
 
 - [Todo List](https://jsfiddle.net/agquick/z46vdtg9/) - Also incorporates [weightless elements](https://weightless.dev)
 
+- [Todo List Full App](https://github.com/agquick/elemx-demo) - Todo List demo app with full code
+
 ## Bindings
 
 ElemX binds expressions using observables and computeds to ReactiveElement attributes using direct attribute bindings and directive bindings.
