@@ -65,13 +65,25 @@ ElemX binds expressions using observables and computeds to ReactiveElement attri
 Attribute bindings use `:` to denote an attribute of the element is bound to a reactive expression.
 
 ```js
-// This will update the value of the input when `this.name` changes.
-<input type="text" :value="this.name"/>
+// This will update the data-name attribute when `this.name` changes.
+<div :data-name="this.name"/>
 ```
+
+You can also use `::` to denote a two-way attribute binding.
+
+```js
+// This will update the data-name attribute when `this.name` changes,
+// *AND* `this.name` will be updated if the data-name attribute changes.
+<div ::data-name="this.name"/>
+```
+
+Attribute bindings will also bind to element properties if they are defined.
 
 ### Directive Bindings
 
 Directive bindings use the `@` symbol. They are definable to perform specific customizable reactive actions to the element.
+
+For example, the `sync` bindings synchronizes a form element with an observable. There are several pre-defined bindings (see below).
 
 ```js
 // This will update the value of the input when `this.name` changes,

@@ -1,6 +1,6 @@
 {
   "name": "elemx",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Javascript front-end library for connecting MobX to native Web Components with a Vue-like template binding syntax",
   "main": "index.js",
   "scripts": {
