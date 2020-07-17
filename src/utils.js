@@ -12,14 +12,17 @@ export function evalInScope(script, scope, opts) {
   } else if (opts.event) {
     fargnames.push('ev');
     fargs.push(opts.event);
-    fn = `
-      "use strict";
-      if (typeof(${script}) == 'function') {
-        ${script}(ev);
-      } else {
+    if (script.includes("(")) {
+      fn = `
+        "use strict";
         ${script};
-      }
-    `
+      `
+    } else {
+      fn = `
+        "use strict";
+        ${script}(ev);
+      `
+    }
   }
 
   let fbargs = fargnames;
