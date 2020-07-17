@@ -39,7 +39,7 @@ export function evalInScope(script, scope, opts) {
 export function buildTemplate({html, css}) {
   var template = document.createElement('template');
   html = html.trim(); // Never return a text node of whitespace as the result
-  html = html.replace(/{{(.*)}}/g, (m, inner)=>{
+  html = html.replace(/{{([^\}]*)}}/g, (m, inner)=>{
     return `<span @text="${inner.trim()}"></span>`
   });
   if (css) {

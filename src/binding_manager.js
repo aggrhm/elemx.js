@@ -111,12 +111,63 @@ class BindingManager {
     let ret = {updateChildren: true};
     debugLog("Processing :binding " + attr.nodeName + " in " + element.nodeName);
     // check input key
-    let field = attr.nodeName.substring(1);
+    var dbl = false;
+    var field = null;
+    if (attr.nodeName[1] == ":") {
+      // this is double bind
+      dbl = true
+      field = attr.nodeName.substring(2);
+    } else {
+      field = attr.nodeName.substring(1);
+    }
+
+    // subscribe to binding
     let disposer = autorun((reaction)=>{
       debugLog(`${element.nodeName} Handling param attribute ${field}`);
-      element[field] = evalInScope(attr.nodeValue, context);
+      let val = evalInScope(attr.nodeValue, context);
+      element._isBindingUpdating = true;
+      if (field in element) {
+        // update directly
+        element[field] = val;
+      } else {
+        // update attribute
+        if (val == false) {
+          element.removeAttribute(field);
+        } else if (val == true) {
+          element.setAttribute(field, "");
+        } else {
+          element.setAttribute(field, val);
+        }
+      }
+      element._isBindingUpdating = false;
     });
     addElementDisposable(element, disposer);
+
+    if (dbl) {
+      // subscribe to attribute changes
+      let observer = new MutationObserver( (mutations)=>{
+        if (element._isBindingUpdating == true) return;
+        mutations.forEach( (mutation)=>{
+          if (mutation.type == "attributes" && mutation.attributeName == field) {
+            let rattr = element.attributes[mutation.attributeName];
+            var val = null;
+            if (rattr == null) {
+              val = false;
+            } else {
+              val = rattr.value;
+              if (val == "") { val = true; }
+            }
+            evalInScope(attr.nodeValue, context, {set: val});
+          }
+        });
+      });
+      observer.observe(element, {attributes: true});
+      addElementDisposable(element, {
+        dispose: ()=> {
+          observer.disconnect();
+        }
+      });
+    }
     return ret;
   }
 
