@@ -65,16 +65,16 @@ ElemX binds expressions using observables and computeds to ReactiveElement attri
 Attribute bindings use `:` to denote an attribute of the element is bound to a reactive expression.
 
 ```js
-// This will update the data-name attribute when `this.name` changes.
-<div :data-name="this.name"/>
+// This will update the name attribute when `this.name` changes.
+<div :name="this.name"/>
 ```
 
 You can also use `::` to denote a two-way attribute binding.
 
 ```js
-// This will update the data-name attribute when `this.name` changes,
-// *AND* `this.name` will be updated if the data-name attribute changes.
-<div ::data-name="this.name"/>
+// This will update the name attribute when `this.name` changes,
+// *AND* `this.name` will be updated if the name attribute changes.
+<div ::name="this.name"/>
 ```
 
 Attribute bindings will also bind to element properties if they are defined.
