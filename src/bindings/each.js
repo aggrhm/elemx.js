@@ -38,7 +38,9 @@ export default {
           
           let newContext = {};
           newContext[cas] = item;
-          newContext.this = context;
+          newContext._this = context;
+          newContext._locals = {};
+          newContext._locals[cas] = item;
 
           let children = Array.from(newNode.childNodes);
           /*

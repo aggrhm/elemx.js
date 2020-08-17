@@ -1,8 +1,17 @@
 export function evalInScope(script, scope, opts) {
   opts = opts ? opts : {};
-  let _this = (scope && scope.this) ? scope.this : scope;
+  let _this = (scope && scope._this) ? scope._this : scope;
   let fargnames = ['context'];
   let fargs = [scope];
+
+  // add locals
+  window.lastScope = scope;
+  if (scope && scope._locals) {
+    Object.keys(scope._locals).forEach( (key)=> {
+      fargnames.push(key);
+      fargs.push(scope._locals[key]);
+    });
+  }
   let fn = `"use strict"; return ${script}`;
 
   if ('set' in opts) {
