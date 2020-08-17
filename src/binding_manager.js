@@ -69,6 +69,12 @@ class BindingManager {
         });
       }
     }
+
+    // mark as binded
+    if (element.isReactiveElement) {
+      element._reactiveBindingsApplied = true;
+      console.log("Applied bindings to " + element.nodeName);
+    }
   }
 
   processDirectiveBinding(element, customElement, context, attr) {

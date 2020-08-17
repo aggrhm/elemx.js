@@ -22,12 +22,15 @@ class ReactiveElement extends HTMLElement {
     debugLog("Building shadow root for " + this.nodeName);
     let content = buildTemplate({html: this.templateHTML(), css: this.templateCSS()}).content;
     this.shadowRoot.appendChild(content);
-    if (!this.hasReactiveParent()) {
+    let reactiveParent = this.reactiveParent
+    // apply reactive bindings if no reactive root or bindings already applied
+    if (reactiveParent == null || reactiveParent._reactiveBindingsApplied) {
       debugLog("APPLYING ROOT LEVEL BINDING FOR " + this.nodeName);
       bindings.applyBindings(this);
       this.isReactiveRoot = true;
     }
     this.onMount();
+    debugLog("Done building shadow root for " + this.nodeName);
   }
 
   disconnectedCallback() {
@@ -55,16 +58,16 @@ class ReactiveElement extends HTMLElement {
     this.dispatchEvent(ev);
   }
 
-  hasReactiveParent() {
+  get reactiveParent() {
     let host = this.getRootNode().host
-    if (host && host.isReactiveElement) return true;
+    if (host && host.isReactiveElement) return host;
     let p = this.parentElement;
     while (true) {
       if (!p) break;
-      if (p.isReactiveElement) return true;
+      if (p.isReactiveElement) return p;
       p = p.parentElement;
     }
-    return false;
+    return null;
   }
   
 }
