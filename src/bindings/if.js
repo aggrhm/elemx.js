@@ -21,7 +21,7 @@ export default {
     let repeatedID = Math.floor(Math.random() * 1e9);
     // insert markers
     debugLog("Inserting template markers");
-    let markers = insertTemplateMarkers(element, repeatedID);
+    let markers = customElement.insertTemplateMarkers(element, repeatedID);
 
     // setup autorun, needed here because element is going away
     reaction(
@@ -34,21 +34,8 @@ export default {
         debugLog("Handling conditional: " + cond);
         if (cond) {
           let newNode = repeatedContent.cloneNode(true);
-          
           let children = Array.from(newNode.childNodes);
-          /*
-          children.forEach( (n)=> {
-            n.smartContext = newContext;
-          });
-          window.children = children;
-          */
-          appendChildToTemplateMarkers(markers, newNode);
-
-          children.forEach( (n)=> {
-            debugLog("APPLYING BINDINGS NOW FOR EACH");
-            bindings.applyBindingsToInnerElement(n, customElement, context);
-            debugLog("DONE APPLYING BINDINGS");
-          });
+          customElement.appendToTemplateMarkers(markers, children, context);
         };
       },
       {

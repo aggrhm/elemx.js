@@ -22,7 +22,7 @@ export default {
     let cas = element.getAttribute('@as');
     // insert markers
     debugLog("Inserting template markers");
-    let markers = insertTemplateMarkers(element, repeatedID);
+    let markers = customElement.insertTemplateMarkers(element, repeatedID);
 
     // setup autorun, needed here because element is going away
     let disposer = reaction(
@@ -31,10 +31,11 @@ export default {
         return array.slice();
       },
       (array, reaction)=>{
-        clearTemplateMarkers(markers);
+        customElement.clearTemplateMarkers(markers);
         debugLog("Iterating " + array.length + " items");
         array.forEach((item)=>{
           let newNode = repeatedContent.cloneNode(true);
+          let children = Array.from(newNode.childNodes);
           
           let newContext = {};
           newContext[cas] = item;
@@ -42,22 +43,7 @@ export default {
           newContext._locals = {};
           newContext._locals[cas] = item;
 
-          let children = Array.from(newNode.childNodes);
-          /*
-          children.forEach( (n)=> {
-            n.smartContext = newContext;
-          });
-          window.children = children;
-          */
-          customElement._reactiveBindingsApplied = false;
-          appendChildToTemplateMarkers(markers, newNode);
-
-          children.forEach( (n)=> {
-            debugLog("APPLYING BINDINGS NOW FOR EACH");
-            bindings.applyBindingsToInnerElement(n, customElement, newContext);
-            debugLog("DONE APPLYING BINDINGS");
-          });
-          customElement._reactiveBindingsApplied = true;
+          customElement.appendToTemplateMarkers(markers, children, newContext);
         });
       },
       {

@@ -81,10 +81,6 @@ export function clearTemplateMarkers(markers) {
   }
 }
 
-export function appendChildToTemplateMarkers(markers, child) {
-  markers[0].parentNode.insertBefore(child, markers[1]);
-}
-
 export function addElementDisposable(element, disposable) {
   element._disposables = element._disposables || [];
   if (typeof(disposable) == 'function') {

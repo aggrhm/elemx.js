@@ -1,5 +1,5 @@
 import bindings from './binding_manager'
-import { buildTemplate, removeElementDisposables, debugLog } from './utils'
+import { buildTemplate, removeElementDisposables, debugLog, insertTemplateMarkers, clearTemplateMarkers } from './utils'
 
 class ReactiveElement extends HTMLElement {
   constructor() {
@@ -68,6 +68,25 @@ class ReactiveElement extends HTMLElement {
       p = p.parentElement;
     }
     return null;
+  }
+
+  insertTemplateMarkers(node, id) {
+    return insertTemplateMarkers(node, id);
+  }
+
+  clearTemplateMarkers(markers) {
+    return clearTemplateMarkers(markers);
+  }
+
+  appendToTemplateMarkers(markers, children, newContext) {
+    this._reactiveBindingsApplied = false;
+    children.forEach( (n)=> {
+      debugLog("APPLYING BINDINGS NOW FOR EACH");
+      markers[0].parentNode.insertBefore(n, markers[1]);
+      bindings.applyBindingsToInnerElement(n, this, newContext);
+      debugLog("DONE APPLYING BINDINGS");
+    });
+    this._reactiveBindingsApplied = true;
   }
   
 }
