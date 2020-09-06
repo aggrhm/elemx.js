@@ -78,11 +78,11 @@ class ReactiveElement extends HTMLElement {
     return clearTemplateMarkers(markers);
   }
 
-  appendToTemplateMarkers(markers, children, newContext) {
+  insertChildrenBefore(anchor, children, newContext) {
     this._reactiveBindingsApplied = false;
     children.forEach( (n)=> {
       debugLog("APPLYING BINDINGS NOW FOR EACH");
-      markers[0].parentNode.insertBefore(n, markers[1]);
+      anchor.parentNode.insertBefore(n, anchor);
       bindings.applyBindingsToInnerElement(n, this, newContext);
       debugLog("DONE APPLYING BINDINGS");
     });

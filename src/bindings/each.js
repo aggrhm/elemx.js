@@ -43,7 +43,8 @@ export default {
           newContext._locals = {};
           newContext._locals[cas] = item;
 
-          customElement.appendToTemplateMarkers(markers, children, newContext);
+          let anchor = markers[1];
+          customElement.insertChildrenBefore(anchor, children, newContext);
         });
       },
       {

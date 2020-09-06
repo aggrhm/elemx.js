@@ -35,7 +35,8 @@ export default {
         if (cond) {
           let newNode = repeatedContent.cloneNode(true);
           let children = Array.from(newNode.childNodes);
-          customElement.appendToTemplateMarkers(markers, children, context);
+          let anchor = markers[1];
+          customElement.insertChildrenBefore(anchor, children, context);
         };
       },
       {
