@@ -73,7 +73,7 @@ class BindingManager {
     // mark as binded
     if (element.isReactiveElement) {
       element._reactiveBindingsApplied = true;
-      console.log("Applied bindings to " + element.nodeName);
+      debugLog("Applied bindings to " + element.nodeName);
     }
   }
 

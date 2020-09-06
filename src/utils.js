@@ -5,7 +5,7 @@ export function evalInScope(script, scope, opts) {
   let fargs = [scope];
 
   // add locals
-  window.lastScope = scope;
+  //window.lastScope = scope;
   if (scope && scope._locals) {
     Object.keys(scope._locals).forEach( (key)=> {
       fargnames.push(key);

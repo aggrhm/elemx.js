@@ -49,6 +49,7 @@ export default {
           });
           window.children = children;
           */
+          customElement._reactiveBindingsApplied = false;
           appendChildToTemplateMarkers(markers, newNode);
 
           children.forEach( (n)=> {
@@ -56,6 +57,7 @@ export default {
             bindings.applyBindingsToInnerElement(n, customElement, newContext);
             debugLog("DONE APPLYING BINDINGS");
           });
+          customElement._reactiveBindingsApplied = true;
         });
       },
       {

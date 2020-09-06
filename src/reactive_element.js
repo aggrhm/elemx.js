@@ -20,7 +20,7 @@ class ReactiveElement extends HTMLElement {
   
   connectedCallback() {
     debugLog("Building shadow root for " + this.nodeName);
-    let content = buildTemplate({html: this.templateHTML(), css: this.templateCSS()}).content;
+    let content = buildTemplate({html: this.constructor.html, css: this.constructor.css}).content;
     this.shadowRoot.appendChild(content);
     let reactiveParent = this.reactiveParent
     // apply reactive bindings if no reactive root or bindings already applied
@@ -45,11 +45,11 @@ class ReactiveElement extends HTMLElement {
   
   }
 
-  templateHTML() {
+  static get html() {
     return "";
   }
 
-  templateCSS() {
+  static get css() {
     return "";
   }
 
